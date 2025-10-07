@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function showRegister() {
+        return view('user.register');
+    }
+
     public function register(Request $request) {
         $request->validate([
             'name' => 'required|string|max:100',
@@ -22,6 +26,10 @@ class UserController extends Controller
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silahkan login.');
     }
 
+    public function showLogin() {
+        return view('user.login');
+    }
+    
     public function login(Request $request) {
         $credentials = $request->validate([
             'email' => 'required|email',
