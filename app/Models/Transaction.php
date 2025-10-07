@@ -10,11 +10,11 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'tanggal',
-        'keterangan',
-        'jumlah',
-        'kategori_id',
-        'user_id',
+        'date',
+        'description',
+        'amount',
+        'categories_id',
+        'users_id',
     ];
 
     // Relasi ke user
