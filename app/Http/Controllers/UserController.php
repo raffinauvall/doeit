@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function showRegister() {
-        return view('user.register');
+        return view('auth.register');
     }
 
     public function register(Request $request) {
@@ -27,9 +30,9 @@ class UserController extends Controller
     }
 
     public function showLogin() {
-        return view('user.login');
+        return view('auth.login');
     }
-    
+
     public function login(Request $request) {
         $credentials = $request->validate([
             'email' => 'required|email',
