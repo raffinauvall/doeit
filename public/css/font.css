@@ -1,0 +1,45 @@
+@font-face {
+    font-family: 'SF-Regular';
+    src: url('../font/SFPRODISPLAYREGULAR.OTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'SF-Bold';
+    src: url('../font/SFPRODISPLAYBOLD.OTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'SF-Medium';
+    src: url('../font/SFPRODISPLAYMEDIUM.OTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'SF-Light';
+    src: url('../font/SF-Pro-Display-Light.otf') format('truetype');
+}
+
+@font-face {
+    font-family: 'SF-SemiBold';
+    src: url('../font/SF-Pro-Display-Semibold.otf') format('truetype');
+}
+
+
+.ff-sfLight {
+    font-family: 'SF-Light';
+}
+
+.ff-sfSemibold {
+    font-family: 'SF-Bold';
+}
+
+.ff-sfMedium {
+    font-family: 'SF-Medium';
+}
+
+.ff-sfBold {
+    font-family: 'SF-Bold';
+}
+
+.ff-sfRegular {
+    font-family: 'SF-Regular';
+}
