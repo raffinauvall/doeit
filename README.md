@@ -1,4 +1,4 @@
-![Logo Doeit](public/logo_doeit.png)
+![Logo Doeit](public/images/logo_doeit.png)
 
 
 <p align="center">
