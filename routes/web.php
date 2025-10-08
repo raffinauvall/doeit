@@ -1,34 +1,47 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GoalController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login.form');
 });
 
-// 🔐 Login
+// 🔐 Auth
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login.form');
 
 Route::post('/login', [UserController::class, 'login'])->name('login');
 
-// 🧾 Register
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register.form');
 
 Route::post('/register', [UserController::class, 'register'])->name('register');
 
-// 🏠 Home
+// 🏠 Protected Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    
+    // Transaction CRUD
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+    Route::put('/transactions/{id}', [TransactionController::class, 'update'])->name('transactions.update');
+    Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+
+    // Goals CRUD
+    Route::get('/goals', [GoalController::class, 'index'])->name('goals.index');
+    Route::post('/goals', [GoalController::class, 'store'])->name('goals.store');
+    Route::put('/goals/{id}', [GoalController::class, 'update'])->name('goals.update');
+    Route::delete('/goals/{id}', [GoalController::class, 'destroy'])->name('goals.destroy');
+
+    // Logout
+    Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 });
