@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CategorieController extends Controller
 {
     public function index() {
-        $categories = Categorie::where('users_id', Auth::id())->get();
+        $categories = Category::where('users_id', Auth::id())->get();
         return view('categories.index', compact('categories'));
     }
 
@@ -22,7 +23,7 @@ class CategorieController extends Controller
             'tipe' => 'required|in:pemasukan,pengeluaran',
         ]);
 
-        Categories::create([
+        Category::create([
             'name' => $request->name,
             'tipe' => $request->tipe,
             'users_id' => Auth::id(),
@@ -37,7 +38,7 @@ class CategorieController extends Controller
             'tipe' => 'in:pemasukan, pengeluaran',
         ]);
 
-        $categories = Categorie::findOrFail($id);
+        $categories = Category::findOrFail($id);
         $categories->update([
             'name' => $request->name,
             'tipe' => $request->tipe,
@@ -47,7 +48,7 @@ class CategorieController extends Controller
     }
 
     public function destroy(Request $request, $id) {
-        $categories = Categorie::findOrFail($id);
+        $categories = Category::findOrFail($id);
         $categories->delete();
         
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus');
