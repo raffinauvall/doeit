@@ -1,0 +1,67 @@
+body{
+    margin: 0;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(212, 208, 208) !important;
+}
+
+.card-login{
+    width: 400px;
+    border-radius: 30px !important;
+    border: 0 !important;
+    box-shadow: 2px 2px 10px 2px rgba(0,0,0,0.27);
+-webkit-box-shadow: 2px 2px 10px 2px rgba(0,0,0,0.27);
+-moz-box-shadow: 2px 2px 10px 2px rgba(0,0,0,0.27);
+}
+
+.subtitle{
+    color: #C8C5C5;
+}
+
+.input-group {
+    position: relative;
+    margin: 20px 0;
+}
+
+.input-group label {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #DCDBDB;
+    padding: 0 5px;
+    pointer-events: none;
+    transition: .5s;
+}
+
+.input-group input {
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+    color: #fff;
+    padding: 0 15px;
+    background: transparent;
+    border: 1.2px solid #DCDBDB;
+    outline: none;
+    border-radius: 10px !important;
+}
+
+.input-group input:focus{
+    border: 1px solid rgb(68, 139, 252);
+    border-radius: 20px;
+}
+
+.input-group input:focus~label,
+.input-group input:valid~label {
+    top: 0;
+    font-size: 14px;
+    background-color: white;
+    color: rgb(68, 139, 252);
+}
+
+a{
+    text-decoration: none !important;
+}
