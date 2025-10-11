@@ -8,86 +8,247 @@
     <link rel="stylesheet" href="{{ asset('css/font.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
-        body {
-        
+        :root {
+            --sidebar-width: 280px;
         }
+
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+
+        /* SIDEBAR */
         .sidebar {
-            width: 230px;
+            width: var(--sidebar-width);
             height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
-            color: white;
+            background-color: #fff;
             padding-top: 1rem;
-            box-shadow: 1px 0px 13px 0px rgba(0,0,0,0.54);
--webkit-box-shadow: 1px 0px 13px 0px rgba(0,0,0,0.54);
--moz-box-shadow: 1px 0px 13px 0px rgba(0,0,0,0.54);
+            box-shadow: 1px 0 13px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1050;
         }
+
         .sidebar a {
-            color: #adb5bd;
             text-decoration: none;
             display: block;
             padding: 10px 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #198754;
             transition: 0.2s;
+            font-size: 18px;
         }
+
         .sidebar a:hover, .sidebar a.active {
-            background-color: #495057;
+            background-color: #198754;
             color: #fff;
+            border-radius: 10px;
         }
+
+        /* MAIN CONTENT */
         .main-content {
-            margin-left: 230px;
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease-in-out;
             padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
+
         .topbar {
             background-color: #fff;
             border-bottom: 1px solid #dee2e6;
-            padding: 10px 20px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border: 0;
+            border-radius: 15px;
+
         }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 80%;
+                max-width: 300px;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .topbar .menu-toggle {
+                display: inline-block;
+            }
+       
+        }
+       
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #198754;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* overlay ketika sidebar dibuka */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1049;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+        .dropdown-menu {
+            padding: 0 !important;
+        }
+        .dropdown-divider{
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .item-logout:hover{
+            border-radius: 5px;
+            background-color: #dc3545;
+            color: white !important;
+            font-weight: 500
+        }
+     
     </style>
 </head>
-<body class="text-white bg-dark ff-sfRegular">
+
+<body class="ff-sfRegular text-dark">
 
     <!-- Sidebar -->
-    <div class="sidebar bg-dark text-center p-3">
-        <img src="{{ asset('images/logo_doeit.png') }}" class="text-center" alt="Logo" width="100">
-        <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }} text-start bg-success rounded-4 ff-sfRegular fw-bold fs-5 p-2 ps-3">
+    <div class="sidebar p-3" id="sidebar">
+        <img src="{{ asset('images/logo_doeit.png') }}" class="mb-4" alt="Logo" width="100">
+        <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
             <i class="bi bi-speedometer2 me-2"></i> Dashboard
         </a>
-        <a href="{{ route('transactions.index') }}" class="{{ request()->is('transactions*') ? 'active' : '' }} text-start">
-            <i class="bi bi-clock-history me-2"></i> Riwayat
+        <a href="{{ route('transactions.index') }}" class="{{ request()->is('transactions*') ? 'active' : '' }}">
+            <i class="bi bi-arrow-left-right me-2 fw-bold" style="text-shadow: 0 0 1px #198754;"></i> Transaction
         </a>
-        <a href="{{ route('goals.index') }}" class="{{ request()->is('goals*') ? 'active' : '' }} text-start">
-            <i class="bi bi-tags me-2"></i> Kategori
+        <a href="{{ route('goals.index') }}" class="{{ request()->is('goals*') ? 'active' : '' }}">
+            <i class="bi bi-bullseye me-2"></i> Goals
         </a>
-        <form action="{{ route('logout') }}" method="POST" class="mt-4 text-center">
-            @csrf
-            <button type="submit" class="btn btn-danger btn-sm">
-                <i class="bi bi-box-arrow-right me-1"></i> Logout
-            </button>
-        </form>
-        
-
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Topbar -->
-        <div class="topbar bg-dark text-white border-0">
-            <h2 class="mb-0 text-white ff-sfBold">Hello, {{ Auth::user()->name }}</h2>
-            <span class="text-white">{{ now()->format('d M Y') }}</span>
-        </div>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
 
-        <!-- Page Content -->
+    <!-- Main Content -->
+    <div class="main-content container-fluid">
+        <!-- Topbar -->
+      <div class="topbar bg-white border-bottom d-flex justify-content-between align-items-center px-3 py-2">
+  <!-- Kiri: Toggle sidebar (muncul hanya di mobile) -->
+  <button class="btn btn-outline-success d-md-none" id="sidebarToggle">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <!-- Tengah: Tanggal + Jam -->
+  <div class="flex-grow-1 text-center text-md-start">
+    <span id="currentTime" class="text-dark ff-sfSemibold fs-5">{{ now()->format('d F Y, H:i:s A') }}</span>
+  </div>
+
+  @php
+  $avatar = Auth::user()->gender === 'male'
+      ? asset('images/avatar_male.png')
+      : asset('images/avatar_female.png');
+    @endphp
+  <div class="d-flex align-items-center">
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+         id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="{{ $avatar }}" 
+     alt="User" 
+     width="42" 
+     height="42" 
+     class="rounded-circle d-inline d-md-none me-2 bg-success">
+           
+        <span class="d-none d-md-inline fs-6 ff-sfSemibold">{{ Auth::user()->name }}</span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenu">
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <form action="{{ route('logout') }}" method="POST">@csrf
+            <button class="dropdown-item item-logout text-danger">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
         <div class="mt-4">
             @yield('content')
         </div>
     </div>
-   
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('sidebarToggle');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+
+        function updateClock() {
+  const now = new Date();
+
+  // Format tanggal & waktu manual
+  const options = { 
+    day: '2-digit', 
+    month: 'long', 
+    year: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit', 
+    hour12: true 
+  };
+
+  const formatted = now.toLocaleString('en-GB', options).replace(',', '');
+  document.getElementById('currentTime').textContent = formatted;
+}
+
+// update setiap 1 detik
+setInterval(updateClock, 1000);
+
+// panggil sekali pas awal load
+updateClock();
+    </script>
+
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </html>
