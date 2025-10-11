@@ -12,7 +12,7 @@ class GoalController extends Controller
     // 🔹 Tampilkan semua goal milik user
     public function index()
     {
-        $goals = Goal::where('user_id', Auth::id())->latest()->get();
+        $goals = Goal::where('users_id', Auth::id())->latest()->get();
 
         // hitung total target & total progress
         $totalTarget = $goals->sum('amount_target');
