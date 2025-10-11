@@ -4,57 +4,50 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transaction;
-use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
-    {
-        // ambil semua transaksi user yang login
-        $transactions = Transaction::where('user_id', Auth::id())->get();
+{
+    $userId = Auth::id();
 
-        // hitung total Income & Expense
-        $totalIncome = $transactions->where('type', 'income')->sum('amount');
-        $totalExpense = $transactions->where('type', 'expense')->sum('amount');
+    // Ambil data income & expense per bulan dari transaksi user yang login
+    $monthlyData = Transaction::selectRaw('
+            MONTH(date) as month,
+            SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as total_income,
+            SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as total_expense
+        ')
+        ->where('user_id', $userId)
+        ->whereYear('date', date('Y'))
+        ->groupBy(DB::raw('MONTH(date)'))
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month'); // biar gampang dicari nanti
 
-        // balance akhir
-        $balance = $totalIncome - $totalExpense;
+    // Inisialisasi semua bulan 1–12
+    $months = [];
+    $incomes = [];
+    $expenses = [];
 
-        // Ambil data bulanan (per bulan, selama tahun ini)
-        $year = Carbon::now()->year;
-
-        $monthlyData = Transaction::select(
-                DB::raw('MONTH(date) as month'),
-                DB::raw('SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as total_income'),
-                DB::raw('SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as total_expense')
-            )
-            ->where('user_id', Auth::id())
-            ->whereYear('date', $year)
-            ->groupBy(DB::raw('MONTH(date)'))
-            ->orderBy('month')
-            ->get();
-
-        $months = [];
-        $incomes = [];
-        $expenses = [];
-
-        for ($i = 1; $i <= 12; $i++) {
-            $data = $monthlyData->firstWhere('month', $i);
-            $months[] = Carbon::create()->month($i)->format('M');
-            $incomes[] = $data ? $data->total_income : 0;
-            $expenses[] = $data ? $data->total_expense : 0;
-        }
-
-        // kirim semua data ke view dashboard
-        return view('dashboard', compact(
-            'totalIncome',
-            'totalExpense',
-            'balance',
-            'transactions',
-            'months',
-            'incomes',
-            'expenses'
-        ));
+    for ($m = 1; $m <= 12; $m++) {
+        $months[] = date('M', mktime(0, 0, 0, $m, 1));
+        $incomes[] = isset($monthlyData[$m]) ? (int) $monthlyData[$m]->total_income : 0;
+        $expenses[] = isset($monthlyData[$m]) ? (int) $monthlyData[$m]->total_expense : 0;
     }
+
+    $totalIncome = array_sum($incomes);
+    $totalExpense = array_sum($expenses);
+    $balance = $totalIncome - $totalExpense;
+
+    return view('dashboard', compact(
+        'months',
+        'incomes',
+        'expenses',
+        'totalIncome',
+        'totalExpense',
+        'balance'
+    ));
+}
+
 }
