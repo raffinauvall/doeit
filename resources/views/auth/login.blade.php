@@ -18,18 +18,18 @@
       <form action="{{ route('login') }}" method="POST">
         @csrf
         <div class="input-group">
-      <input type="email" id="email" placeholder=" " required>
+      <input type="email" id="email" name="email" placeholder=" " required>
       <label for="email">e-mail address</label>
     </div>
 
     <div class="input-group">
-      <input type="password" id="password" placeholder=" " required>
+      <input type="password" id="password" name="password" placeholder=" " required>
       <label for="password">password</label>
     </div>
        
         <button type="submit" class="btn btn-success mb-3 w-100"><span class="ff-sfSemibold">Login</span></button>
       </form>
-      <span class="text-center ff-sfRegular mb-2">Dont have an account? <a href="/register" class="text-success">Sign Up</a></span>
+      <span class="text-center ff-sfRegular mb-2">Dont have an account? <a href="/register" class="text-success ff-sfBold">Sign Up</a></span>
     </div>
   </div>
 
