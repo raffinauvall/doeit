@@ -1,22 +1,14 @@
 
 /* DASHBOARD PAGE */
-.card{
-    background-color: #0d0d0d60;
-}
+
 
 .finance-title{
  
 }
 
-.circle{
-    width: 50px;
-    height: 50px;
-    border-radius: 100%;
-    background-color: #0d0d0d36;
-}
 
 .amount-balance{
-       font-size: 25px;
+    font-size: 35px;
     font-weight: 600;
     margin-bottom: -5px;
 }
