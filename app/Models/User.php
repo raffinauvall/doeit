@@ -16,6 +16,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'gender',
     ];
 
     protected $hidden = [
@@ -28,10 +29,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class);
     }
-
-    // Relasi ke kategori
-    public function categories()
+    public function goals()
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Goal::class);
     }
+   
 }
