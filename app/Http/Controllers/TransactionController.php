@@ -8,12 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-    // 🔹 Tampilkan semua transaksi user (misal di halaman riwayat/dashboard)
     public function index()
     {
         $transactions = Transaction::where('user_id', Auth::id())->latest()->get();
 
-        // Hitung total Income dan Expense
         $totalIncome = $transactions->where('type', 'income')->sum('amount');
         $totalExpense = $transactions->where('type', 'expense')->sum('amount');
         $balance = $totalIncome - $totalExpense;
@@ -28,6 +26,7 @@ class TransactionController extends Controller
             'type' => 'required|in:income,expense',
             'category' => 'required|string|max:100',
             'amount' => 'required|numeric|min:0',
+            'date' => 'required|date',
             'description' => 'nullable|string',
         ]);
 
@@ -36,6 +35,7 @@ class TransactionController extends Controller
             'type' => $request->type,
             'category' => $request->category,
             'amount' => $request->amount,
+            'date' => $request->date,
             'description' => $request->description,
         ]);
 
