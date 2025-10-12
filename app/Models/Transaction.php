@@ -12,9 +12,10 @@ class Transaction extends Model
     protected $fillable = [
         'date',
         'description',
+        'category',
         'amount',
         'type',
-        'users_id',
+        'user_id',
     ];
 
     // Relasi ke user
