@@ -11,6 +11,17 @@
 <body class=" ff-sfRegular">
 
   <div class="container mt-5 d-flex justify-content-center">
+    <div class="group">
+     @if ($errors->any())
+      <div class="alert alert-danger w-100 mb-3">
+        <strong>Terjadi kesalahan:</strong>
+        <ul class="mb-0 mt-2">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
     <div class="card card-login p-4 shadow-sm text-black">
       <img src="{{ asset('images/logo_doeit.png') }}" alt="" width="100" class="mb-3">
       <h3 class="mb-1 text-start ff-sfSemibold">Sign In</h3>
@@ -32,6 +43,6 @@
       <span class="text-center ff-sfRegular mb-2">Dont have an account? <a href="/register" class="text-success ff-sfBold">Sign Up</a></span>
     </div>
   </div>
-
+</div>
 </body>
 </html>
