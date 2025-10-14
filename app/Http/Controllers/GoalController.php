@@ -38,7 +38,7 @@ class GoalController extends Controller
         }
 
         Goal::create([
-            'user_id' => Auth::id(),
+            'users_id' => Auth::id(),
             'title' => $request->title,
             'amount_target' => $request->amount_target,
             'amount_current' => $request->amount_current ?? 0,
@@ -52,7 +52,7 @@ class GoalController extends Controller
     // 🔹 Update goal
     public function update(Request $request, $id)
     {
-        $goal = Goal::where('user_id', Auth::id())->findOrFail($id);
+        $goal = Goal::where('users_id', Auth::id())->findOrFail($id);
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -83,7 +83,7 @@ class GoalController extends Controller
     // 🔹 Hapus goal
     public function destroy($id)
     {
-        $goal = Goal::where('user_id', Auth::id())->findOrFail($id);
+        $goal = Goal::where('users_id', Auth::id())->findOrFail($id);
 
         if ($goal->photo && Storage::disk('public')->exists($goal->photo)) {
             Storage::disk('public')->delete($goal->photo);
