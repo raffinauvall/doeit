@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function showRegister() {
+    public function showRegister()
+    {
         return view('auth.register');
     }
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|string|unique:users',
@@ -27,14 +29,16 @@ class UserController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silahkan login.');
+        return redirect()->route('login')->with('success', 'Registrastion success!');
     }
 
-    public function showLogin() {
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -43,19 +47,57 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended('dashboard');
-        } 
+        }
 
         return back()->withErrors([
-            'email' => 'Email atau password salah'
+            'email' => 'Email or password incorrect'
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect('/login');
     }
-    
+
+    // Change Password
+    public function editPassword()
+    {
+        return view('auth.edit-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // ✅ Validasi input
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'min:8', 'confirmed'],
+        ], [
+            'current_password.required' => 'Password lama wajib diisi.',
+            'new_password.required' => 'Password baru wajib diisi.',
+            'new_password.min' => 'Password minimal 8 karakter.',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        // ✅ Ambil user yang sedang login
+        $user = Auth::user();
+
+        // ❌ Jika password lama salah
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password lama tidak sesuai.']);
+        }
+
+        // ✅ Update password user yang login aja
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        // ✅ Redirect dengan pesan sukses
+        return redirect()
+            ->route('dashboard')
+            ->with('success', 'Password berhasil diperbarui!');
+    }
 }
