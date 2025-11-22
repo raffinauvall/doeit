@@ -46,7 +46,7 @@ class GoalController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->back()->with('success', 'Goal baru berhasil ditambahkan!');
+        return redirect()->back()->with('success', 'New goal has been successfully added!');
     }
 
     // 🔹 Update goal
@@ -77,7 +77,7 @@ class GoalController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->back()->with('success', 'Goal berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Goal successfully updated!');
     }
 
     // 🔹 Hapus goal
@@ -91,6 +91,6 @@ class GoalController extends Controller
 
         $goal->delete();
 
-        return redirect()->back()->with('success', 'Goal berhasil dihapus!');
+        return redirect()->back()->with('success', 'Goal successfully deleted!');
     }
 }
