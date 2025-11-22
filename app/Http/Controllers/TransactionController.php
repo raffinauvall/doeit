@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -70,4 +71,37 @@ class TransactionController extends Controller
 
         return redirect()->back()->with('success', 'Transaksi berhasil dihapus!');
     }
+
+   public function exportPdf(Request $request)
+{
+    // Ambil input & pastikan formatnya aman
+    $month = $request->filled('month') ? (int) $request->input('month') : null;
+    $year = $request->filled('year') ? (int) $request->input('year') : now()->year;
+
+    $query = Transaction::where('user_id', Auth::id())
+        ->orderBy('date', 'desc');
+
+    if ($month && $year) {
+        $query->whereMonth('date', $month)
+              ->whereYear('date', $year);
+    } elseif ($year) {
+        $query->whereYear('date', $year);
+    }
+
+    $transactions = $query->get();
+
+    $totalIncome = $transactions->where('type', 'income')->sum('amount');
+    $totalExpense = $transactions->where('type', 'expense')->sum('amount');
+
+    $pdf = Pdf::loadView('transactions.pdf', compact(
+        'transactions', 'totalIncome', 'totalExpense', 'month', 'year'
+    ));
+
+    $fileName = 'financial_report_' . 
+                ($month ? str_pad($month, 2, '0', STR_PAD_LEFT) . '_' : '') . 
+                $year . '.pdf';
+
+    return $pdf->download($fileName);
+}
+
 }
