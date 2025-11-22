@@ -212,7 +212,7 @@
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenu">
                         <li>
   <a class="dropdown-item" href="{{ route('auth.editPassword') }}">
-    <i class="bi bi-key me-2"></i> Ubah Password
+    <i class="bi bi-key me-2"></i> Change Password
   </a>
 </li>
                         <li>
