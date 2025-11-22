@@ -89,6 +89,50 @@
             </div>
         </div>
 
+        <div class="card shadow-sm border-0 mb-4" id="export-box">
+  <div class="card-body">
+    <h5 class="card-title mb-3">
+      <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>
+      <span class="ff-sfBold">Export Financial Report</span>
+    </h5>
+
+    <form action="{{ route('transactions.exportPdf') }}" method="GET" class="row g-3 align-items-end">
+      <!-- Pilih Bulan -->
+      <div class="col-md-4">
+        <label for="month" class="form-label fw-semibold">Month</label>
+        <select name="month" id="month" class="form-select">
+          <option value="">Choose month</option>
+          @for ($m = 1; $m <= 12; $m++)
+            <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>
+              {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+            </option>
+          @endfor
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label for="year" class="form-label fw-semibold">Year</label>
+        <select name="year" id="year" class="form-select">
+          <option value="">Choose year</option>
+          @for ($y = now()->year; $y >= 2020; $y--)
+            <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
+              {{ $y }}
+            </option>
+          @endfor
+        </select>
+      </div>
+
+      
+      <div class="col-md-4 d-grid">
+        <button type="submit" class="btn btn-danger fw-semibold">
+          <i class="bi bi-filetype-pdf me-2"></i> Export PDF
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
     </div>
 
     {{-- 🧠 JS Filter --}}
