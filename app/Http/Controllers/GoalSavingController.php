@@ -36,7 +36,7 @@ class GoalSavingController extends Controller
 
         $this->recalculateGoal($goalId);
 
-        return back()->with('success', 'Tabungan berhasil ditambahkan!');
+        return back()->with('success', 'Savings successfully added!');
     }
 
     public function edit($id)
@@ -59,7 +59,7 @@ class GoalSavingController extends Controller
         $this->recalculateGoal($saving->goal_id);
 
         return redirect()->route('goals.savings.index', $saving->goal_id)
-                         ->with('success', 'Data tabungan berhasil diperbarui!');
+                         ->with('success', 'Savings data has been successfully updated!');
     }
 
     public function destroy($id)
@@ -70,7 +70,7 @@ class GoalSavingController extends Controller
 
         $this->recalculateGoal($goalId);
 
-        return back()->with('success', 'Tabungan berhasil dihapus!');
+        return back()->with('success', 'Savings successfully deleted!');
     }
 
     private function recalculateGoal($goalId)
