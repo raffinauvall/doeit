@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
     Route::put('/transactions/{id}', [TransactionController::class, 'update'])->name('transactions.update');
     Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+Route::get('/export-pdf', [TransactionController::class, 'exportPdf'])->name('transactions.exportPdf');
 
     // Goals CRUD
     Route::get('/goals', [GoalController::class, 'index'])->name('goals.index');
