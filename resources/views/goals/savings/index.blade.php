@@ -177,7 +177,7 @@
   @endif
 </script>
 
-{{-- 🌟 MOBILE STYLING FIX --}}
+{{-- 🌟 MOBILE STYLING FIX ---}}
 <style>
   /* Gambar Goal */
   .goal-image {
