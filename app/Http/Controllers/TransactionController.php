@@ -40,7 +40,7 @@ class TransactionController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->back()->with('success', 'Transaksi berhasil ditambahkan!');
+        return redirect()->back()->with('success', 'Transaction successfully added!');
     }
 
     public function update(Request $request, $id)
@@ -61,7 +61,7 @@ class TransactionController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->back()->with('success', 'Transaksi berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Transaction successfully updated!');
     }
 
     public function destroy($id)
@@ -69,7 +69,7 @@ class TransactionController extends Controller
         $transaction = Transaction::where('user_id', Auth::id())->findOrFail($id);
         $transaction->delete();
 
-        return redirect()->back()->with('success', 'Transaksi berhasil dihapus!');
+        return redirect()->back()->with('success', 'Transaction successfully deleted!');
     }
 
    public function exportPdf(Request $request)
