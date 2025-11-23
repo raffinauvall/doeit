@@ -26,7 +26,8 @@ class UserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'gender' => $request->gender
         ]);
 
         return redirect()->route('login')->with('success', 'Registrastion success!');
