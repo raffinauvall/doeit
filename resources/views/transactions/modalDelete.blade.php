@@ -4,12 +4,12 @@
     <div class="modal-content border-0 shadow rounded-4">
       <div class="modal-header border-0">
         <h5 class="modal-title fw-bold text-danger">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i> Hapus Transaksi?
+          <i class="bi bi-exclamation-triangle-fill me-2"></i> Delete Transaction?
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-secondary">
-        Apakah kamu yakin ingin menghapus transaksi ini? Aksi ini tidak dapat dibatalkan.
+        Are you sure you want to delete this transaction? This action cannot be undone.
       </div>
       <div class="modal-footer border-0">
         <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
