@@ -110,7 +110,7 @@
                         grid: { color: 'rgba(0,0,0,0.1)' },
                         title: {
                             display: true,
-                            text: 'Jumlah (Rupiah)',
+                            text: 'Amount (Rupiah)',
                             color: '#000',
                             font: { weight: 'bold' }
                         }
