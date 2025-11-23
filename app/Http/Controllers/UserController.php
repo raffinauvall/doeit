@@ -71,31 +71,26 @@ class UserController extends Controller
 
     public function updatePassword(Request $request)
     {
-        // ✅ Validasi input
         $request->validate([
             'current_password' => ['required'],
-            'new_password' => ['required', 'min:8', 'confirmed'],
+            'new_password' => ['required', 'min:6', 'confirmed'],
         ], [
             'current_password.required' => 'Password lama wajib diisi.',
             'new_password.required' => 'Password baru wajib diisi.',
-            'new_password.min' => 'Password minimal 8 karakter.',
+            'new_password.min' => 'Password minimal 6 karakter.',
             'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
-        // ✅ Ambil user yang sedang login
         $user = Auth::user();
 
-        // ❌ Jika password lama salah
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Password lama tidak sesuai.']);
         }
 
-        // ✅ Update password user yang login aja
         $user->update([
             'password' => Hash::make($request->new_password),
         ]);
 
-        // ✅ Redirect dengan pesan sukses
         return redirect()
             ->route('dashboard')
             ->with('success', 'Password berhasil diperbarui!');
