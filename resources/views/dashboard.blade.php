@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard')
+
 @section('content')
 <div class="container-fluid">
     <h4 class="mb-4 ff-sfBold fs-2">Hello, <span class="me-1"> {{ Auth::user()->name }}</span> <img src="{{ asset('images/wave.png') }}" alt="" width="35" class="mb-1"></h4>
@@ -81,7 +83,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Grafik Pemasukan & Pengeluaran Tahunan',
+                        text: 'Annual Income & Expenses Chart',
                         font: { size: 16, weight: 'bold' },
                         color: '#000'
                     }
@@ -92,7 +94,7 @@
                         grid: { display: false },
                         title: {
                             display: true,
-                            text: 'Bulan',
+                            text: 'Months',
                             color: '#000',
                             font: { weight: 'bold' }
                         }
