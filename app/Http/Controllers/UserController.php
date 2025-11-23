@@ -76,16 +76,16 @@ class UserController extends Controller
             'current_password' => ['required'],
             'new_password' => ['required', 'min:6', 'confirmed'],
         ], [
-            'current_password.required' => 'Password lama wajib diisi.',
-            'new_password.required' => 'Password baru wajib diisi.',
-            'new_password.min' => 'Password minimal 6 karakter.',
-            'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'current_password.required' => 'The old password is required.',
+            'new_password.required' => 'The new password is required.',
+            'new_password.min' => 'Password must be at least 6 characters.',
+            'new_password.confirmed' => 'Password confirmation does not match.',
         ]);
 
         $user = Auth::user();
 
         if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Password lama tidak sesuai.']);
+            return back()->withErrors(['current_password' => 'The old password does not match.']);
         }
 
         $user->update([
@@ -94,6 +94,6 @@ class UserController extends Controller
 
         return redirect()
             ->route('dashboard')
-            ->with('success', 'Password berhasil diperbarui!');
+            ->with('success', 'Password has been successfully updated!');
     }
 }
