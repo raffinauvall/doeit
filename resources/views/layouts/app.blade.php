@@ -4,11 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'DoeIt') }}</title>
+
+    <!-- Title Dinamis -->
+    <title>@yield('title')</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo_doeit.png') }}">
+
+    <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Font & Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/font.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         :root {
@@ -75,7 +84,6 @@
             z-index: 100;
             border: 0;
             border-radius: 15px;
-
         }
 
         /* --- MOBILE --- */
@@ -93,20 +101,6 @@
             .main-content {
                 margin-left: 0;
             }
-
-            .topbar .menu-toggle {
-                display: inline-block;
-            }
-
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            color: #198754;
-            cursor: pointer;
-            display: none;
         }
 
         /* overlay ketika sidebar dibuka */
@@ -138,10 +132,11 @@
             border-radius: 5px;
             background-color: #dc3545;
             color: white !important;
-            font-weight: 500
+            font-weight: 500;
         }
     </style>
 </head>
+
 
 <body class="ff-sfRegular text-dark">
 

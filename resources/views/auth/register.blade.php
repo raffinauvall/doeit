@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ asset('images/logo_doeit.png') }}">
   <link rel="stylesheet" href="{{ asset('css/login.css') }}">
   <link rel="stylesheet" href="{{ asset('css/font.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,7 +17,7 @@
     {{-- ✅ ERROR VALIDASI --}}
     @if ($errors->any())
       <div class="alert alert-danger w-100 mb-3">
-        <strong>Terjadi kesalahan:</strong>
+        <strong>An error occurred:</strong>
         <ul class="mb-0 mt-2">
           @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>
