@@ -2,7 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-warning text-white">
-        <h5 class="modal-title" id="editModalLabel{{ $transaction->id }}">Edit Transaksi</h5>
+        <h5 class="modal-title" id="editModalLabel{{ $transaction->id }}">Edit Transaction</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -11,7 +11,7 @@
         @method('PUT')
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Deskripsi</label>
+            <label class="form-label">Description</label>
             <input type="text" name="description" class="form-control" value="{{ $transaction->description }}" required>
           </div>
           <div class="mb-3">
@@ -19,11 +19,11 @@
             <input type="text" name="category" class="form-control" value="{{ $transaction->category }}" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Jumlah</label>
+            <label class="form-label">Amount</label>
             <input type="number" name="amount" class="form-control" value="{{ $transaction->amount }}" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Tipe</label>
+            <label class="form-label">Type</label>
             <select name="type" class="form-select" required>
               <option value="income" {{ $transaction->type == 'income' ? 'selected' : '' }}>Income</option>
               <option value="expense" {{ $transaction->type == 'expense' ? 'selected' : '' }}>Expense</option>
