@@ -1,67 +1,83 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-3">
+<div class="container mt-4">
 
   {{-- 🔙 Back --}}
-  <a href="{{ route('goals.index') }}" class="btn btn-outline-secondary mb-3 rounded-pill px-3 py-1">
+  <a href="{{ route('goals.index') }}" class="btn btn-outline-secondary mb-3 rounded-pill px-4">
     ← Back to Goals
   </a>
 
   {{-- 🧠 Goal Info --}}
   <div class="card shadow-sm rounded-4 mb-4 border-0 position-relative">
-    <div class="card-body p-3">
+    <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3 position-relative">
 
-      {{-- Foto Goal --}}
-      <div class="w-100 mb-3">
-        @if($goal->photo)
-          <img src="{{ asset('storage/' . $goal->photo) }}" class="goal-image-mobile rounded-4">
-        @else
-          <img src="{{ asset('images/default_goal.jpg') }}" class="goal-image-mobile rounded-4">
-        @endif
+      {{-- ✅ FOTO GOAL --}}
+      @if($goal->photo)
+        <img src="{{ asset('storage/' . $goal->photo) }}" alt="{{ $goal->title }}"
+             class="goal-image rounded-4">
+      @else
+        <img src="{{ asset('images/default_goal.jpg') }}" alt="Goal Default"
+             class="goal-image rounded-4">
+      @endif
+
+      {{-- 🧾 Detail --}}
+      <div class="flex-fill w-100">
+
+        {{-- Judul + Badge Mobile --}}
+        <div class="d-flex justify-content-between align-items-center d-md-none mb-2">
+          <h4 class="fw-bold text-dark mb-0">{{ $goal->title }}</h4>
+
+          <span id="goalStatusMobile" 
+                class="badge px-3 py-2 border fw-semibold"></span>
+        </div>
+
+        {{-- Judul Desktop --}}
+        <h4 class="fw-bold text-dark mb-1 d-none d-md-block">
+          {{ $goal->title }}
+        </h4>
+
+        <p class="text-muted mb-2">{{ $goal->description ?? '-' }}</p>
+
+        @php
+          $progress = $goal->amount_target > 0 
+                      ? ($goal->amount_current / $goal->amount_target) * 100 
+                      : 0;
+        @endphp
+
+        {{-- Progress Bar --}}
+        <div class="progress rounded-pill progress-mobile">
+          <div class="progress-bar bg-success" role="progressbar" 
+               style="width: {{ $progress }}%;"></div>
+        </div>
+
+        <small class="text-secondary d-block mt-1">
+          Rp {{ number_format($goal->amount_current, 0, ',', '.') }} /
+          Rp {{ number_format($goal->amount_target, 0, ',', '.') }}
+        </small>
       </div>
 
-      {{-- Judul + Badge Status --}}
-      <div class="d-flex justify-content-between align-items-center mb-1">
-        <h4 class="fw-bold m-0">{{ $goal->title }}</h4>
-        <span id="goalStatus" class="goal-status-badge"></span>
-      </div>
+      {{-- 🏷 BADGE DESKTOP --}}
+      <span id="goalStatus" 
+            class="badge px-3 py-2 border position-absolute top-0 end-0 m-3 d-none d-md-inline-block fw-semibold">
+      </span>
 
-      {{-- Deskripsi --}}
-      <p class="text-muted mb-2">{{ $goal->description ?? '-' }}</p>
-
-      @php
-        $progress = $goal->amount_target > 0 
-                    ? ($goal->amount_current / $goal->amount_target) * 100 
-                    : 0;
-      @endphp
-
-      {{-- Progress --}}
-      <div class="progress rounded-pill" style="height: 14px;">
-        <div class="progress-bar bg-success" style="width: {{ $progress }}%;"></div>
-      </div>
-
-      <small class="text-secondary d-block mt-1">
-        Rp {{ number_format($goal->amount_current, 0, ',', '.') }} /
-        Rp {{ number_format($goal->amount_target, 0, ',', '.') }}
-      </small>
     </div>
   </div>
 
-  {{-- 💰 Add Saving --}}
-  <div class="d-flex justify-content-between align-items-center mb-2">
+  {{-- 💰 Add Saving Button --}}
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h5 class="fw-bold m-0">Savings History</h5>
-
-    <button class="btn btn-success rounded-pill px-3 py-1 fw-semibold"
+    <button class="btn btn-success rounded-pill px-4 py-2 fw-semibold" 
             data-bs-toggle="modal" data-bs-target="#addSavingModal">
-      + Add
+      + Add Saving
     </button>
   </div>
 
-  {{-- 📋 Table --}}
+  {{-- 📋 Savings Table --}}
   <div class="table-responsive shadow-sm rounded-4 overflow-hidden">
-    <table class="table table-hover align-middle mb-0 small">
-      <thead class="table-light text-uppercase text-secondary small">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light text-uppercase small text-secondary">
         <tr>
           <th>Date</th>
           <th>Amount</th>
@@ -71,110 +87,118 @@
       </thead>
       <tbody>
         @forelse($savings as $saving)
-        <tr>
-          <td>{{ \Carbon\Carbon::parse($saving->saved_at)->format('d M Y') }}</td>
-          <td class="text-success fw-bold">+Rp {{ number_format($saving->amount) }}</td>
-          <td>{{ $saving->note ?? '-' }}</td>
-          <td>
-            <form action="{{ route('goals.savings.destroy', $saving->id) }}" method="POST">
-              @csrf @method('DELETE')
-              <button class="btn btn-danger btn-sm rounded-pill px-3 py-1">
-                <i class="bi bi-trash"></i>
-              </button>
-            </form>
-          </td>
-        </tr>
+          <tr>
+            <td>{{ \Carbon\Carbon::parse($saving->saved_at)->format('d M Y') }}</td>
+            <td class="text-success fw-bold">+Rp {{ number_format($saving->amount, 0, ',', '.') }}</td>
+            <td>{{ $saving->note ?? '-' }}</td>
+            <td>
+              <form action="{{ route('goals.savings.destroy', $saving->id) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
         @empty
-        <tr>
-          <td colspan="4" class="text-center text-muted py-4">No savings added yet.</td>
-        </tr>
+          <tr>
+            <td colspan="4" class="text-muted py-4 text-center">
+              No savings added yet.
+            </td>
+          </tr>
         @endforelse
       </tbody>
     </table>
   </div>
-
 </div>
 
-{{-- Modal Add --}}
-<div class="modal fade" id="addSavingModal" tabindex="-1">
+{{-- 🧾 Modal Add Saving --}}
+<div class="modal fade" id="addSavingModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <form action="{{ route('goals.savings.store', $goal->id) }}" method="POST" class="modal-content">
       @csrf
+
       <div class="modal-header">
         <h5 class="modal-title fw-bold">Add Saving</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
 
+      <div class="modal-body">
         <div class="mb-3">
           <label class="form-label">Amount</label>
           <input type="number" name="amount" class="form-control" required>
         </div>
-
         <div class="mb-3">
           <label class="form-label">Date</label>
           <input type="date" name="saved_at" class="form-control">
         </div>
-
         <div class="mb-3">
-          <label class="form-label">Note (optional)</label>
+          <label class="form-label">Note</label>
           <textarea name="note" class="form-control" rows="2"></textarea>
         </div>
+      </div>
 
-      </div>
       <div class="modal-footer">
-        <button class="btn btn-outline-secondary rounded-pill">Cancel</button>
-        <button class="btn btn-success rounded-pill px-4">Save</button>
+        <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-success rounded-pill px-4">Save</button>
       </div>
+
     </form>
   </div>
 </div>
 
-{{-- Status Logic --}}
+{{-- 🔥 Badge Status Logic --}}
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const amountCurrent = {{ $goal->amount_current }};
-  const amountTarget = {{ $goal->amount_target }};
-  const badge = document.getElementById("goalStatus");
+  document.addEventListener("DOMContentLoaded", function() {
+    const amountCurrent = {{ $goal->amount_current }};
+    const amountTarget = {{ $goal->amount_target }};
 
-  if (amountTarget > 0 && amountCurrent >= amountTarget) {
-    badge.textContent = "Finished";
-    badge.classList.add("badge-finished");
-  } else {
-    badge.textContent = "Ongoing";
-    badge.classList.add("badge-ongoing");
-  }
-});
+    const badgeDesktop = document.getElementById("goalStatus");
+    const badgeMobile = document.getElementById("goalStatusMobile");
+
+    let text = "";
+    let className = "";
+
+    if (amountCurrent >= amountTarget && amountTarget > 0) {
+      text = "Finished";
+      className = "text-success border-success";
+    } else {
+      text = "Ongoing";
+      className = "text-primary border-primary";
+    }
+
+    if (badgeDesktop) {
+      badgeDesktop.textContent = text;
+      badgeDesktop.classList.add(...className.split(" "));
+    }
+
+    if (badgeMobile) {
+      badgeMobile.textContent = text;
+      badgeMobile.classList.add(...className.split(" "));
+    }
+  });
 </script>
 
-{{-- Styles --}}
+{{-- 🎯 Styling khusus responsif gambar --}}
 <style>
-  .goal-image-mobile {
-    width: 100%;
-    height: 180px;
+  /* Desktop default */
+  .goal-image {
+    width: 150px;
+    height: 100px;
     object-fit: cover;
   }
 
-  /* Badge Status – sejajar judul */
-  .goal-status-badge {
-    padding: 5px 12px;
-    font-size: 0.8rem;
-    border-radius: 50px;
-    background: #fff;
-    border: 2px solid #0d6efd;
-    color: #0d6efd;
-    white-space: nowrap;
-  }
-
-  .badge-finished {
-    border-color: #198754;
-    color: #198754;
-  }
-
+  /* Mobile full image */
   @media (max-width: 576px) {
-    table th, table td {
-      font-size: 0.82rem;
-      white-space: nowrap;
+    .goal-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    .progress-mobile {
+      width: 100%;
     }
   }
 </style>
