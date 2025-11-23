@@ -10,50 +10,49 @@
 
   {{-- 🧠 Goal Info --}}
   <div class="card shadow-sm rounded-4 mb-4 border-0 bg-glass position-relative">
-    <div class="card-body d-flex align-items-center gap-4 position-relative">
+    <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3 position-relative">
 
       {{-- ✅ Foto Goal --}}
       @if($goal->photo)
-        <img src="{{ asset('storage/' . $goal->photo) }}" alt="{{ $goal->title }}" 
-             class="rounded-4" style="width: 150px; height: 100px; object-fit: cover;">
+        <img src="{{ asset('storage/' . $goal->photo) }}" alt="{{ $goal->title }}"
+             class="rounded-4 goal-image">
       @else
-        <img src="{{ asset('images/default_goal.jpg') }}" alt="Goal Default" 
-             class="rounded-4" style="width: 150px; height: 100px; object-fit: cover;">
+        <img src="{{ asset('images/default_goal.jpg') }}" alt="Goal Default"
+             class="rounded-4 goal-image">
       @endif
 
       {{-- 🧾 Detail --}}
-      <div>
+      <div class="flex-fill">
         <h4 class="fw-bold text-dark mb-1">{{ $goal->title }}</h4>
         <p class="text-muted mb-2">{{ $goal->description ?? '-' }}</p>
 
-        {{-- Progress Bar --}}
         @php
           $progress = $goal->amount_target > 0 
                       ? ($goal->amount_current / $goal->amount_target) * 100 
                       : 0;
         @endphp
-        <div class="progress rounded-pill" style="height: 15px; width: 300px;">
+
+        {{-- Progress Bar --}}
+        <div class="progress rounded-pill progress-mobile">
           <div class="progress-bar bg-success" role="progressbar" 
-               style="width: {{ $progress }}%;" 
-               aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
-          </div>
+               style="width: {{ $progress }}%;"></div>
         </div>
+
         <small class="text-secondary d-block mt-1">
           Rp {{ number_format($goal->amount_current, 0, ',', '.') }} /
           Rp {{ number_format($goal->amount_target, 0, ',', '.') }}
         </small>
       </div>
 
-      {{-- 🏷️ STATUS BADGE (pojok kanan atas) --}}
+      {{-- 🏷 STATUS BADGE --}}
       <span id="goalStatus" 
-            class="badge position-absolute top-0 end-0 m-3 rounded-pill px-3 py-2 shadow-sm fs-6"></span>
-
+            class="badge status-badge"></span>
     </div>
   </div>
 
   {{-- 💰 Add Saving Button --}}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-bold">Savings History</h5>
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h5 class="fw-bold m-0">Savings History</h5>
     <button class="btn btn-success rounded-pill px-4 py-2 fw-semibold" 
             data-bs-toggle="modal" data-bs-target="#addSavingModal">
       + Add Saving
@@ -89,7 +88,7 @@
           </tr>
         @empty
           <tr>
-            <td colspan="4" class="text-muted py-4">No savings added yet.</td>
+            <td colspan="4" class="text-muted py-4 text-center">No savings added yet.</td>
           </tr>
         @endforelse
       </tbody>
@@ -98,28 +97,33 @@
 </div>
 
 {{-- 🧾 Modal Add Saving --}}
-<div class="modal fade" id="addSavingModal" tabindex="-1" aria-labelledby="addSavingModalLabel" aria-hidden="true">
+<div class="modal fade" id="addSavingModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <form action="{{ route('goals.savings.store', $goal->id) }}" method="POST" class="modal-content">
       @csrf
+
       <div class="modal-header">
-        <h5 class="modal-title fw-bold" id="addSavingModalLabel">Add Saving</h5>
+        <h5 class="modal-title fw-bold">Add Saving</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
         <div class="mb-3">
           <label class="form-label">Amount</label>
-          <input type="number" name="amount" class="form-control" placeholder="Enter amount..." required>
+          <input type="number" name="amount" class="form-control" required>
         </div>
+
         <div class="mb-3">
           <label class="form-label">Date</label>
           <input type="date" name="saved_at" class="form-control">
         </div>
+
         <div class="mb-3">
           <label class="form-label">Note (optional)</label>
-          <textarea name="note" class="form-control" rows="2" placeholder="e.g. Tabungan minggu ini"></textarea>
+          <textarea name="note" class="form-control" rows="2"></textarea>
         </div>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
         <button type="submit" class="btn btn-success rounded-pill px-4">Save</button>
@@ -133,18 +137,19 @@
   document.addEventListener("DOMContentLoaded", function() {
     const amountCurrent = {{ $goal->amount_current }};
     const amountTarget = {{ $goal->amount_target }};
-    const statusEl = document.getElementById("goalStatus");
+    const badge = document.getElementById("goalStatus");
 
     if (amountCurrent >= amountTarget && amountTarget > 0) {
-      statusEl.textContent = "Finished";
-      statusEl.classList.add("border","border-success", "text-success", "rounded-pill");
+      badge.textContent = "Finished";
+      badge.classList.add("badge-success-outline");
     } else {
-      statusEl.textContent = "Ongoing";
-      statusEl.classList.add("border", "border-primary", "text-primary", "rounded-pill");
+      badge.textContent = "Ongoing";
+      badge.classList.add("badge-primary-outline");
     }
   });
 </script>
-  {{-- ✅ Toastify.js CDN --}}
+
+{{-- Toastify --}}
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
@@ -153,10 +158,9 @@
     Toastify({
       text: "{{ session('success') }}",
       duration: 3000,
-      gravity: "top", // posisi atas
-      position: "right", // pojok kanan
+      gravity: "top",
+      position: "right",
       backgroundColor: "#198754",
-      stopOnFocus: true,
       close: true,
     }).showToast();
   @endif
@@ -168,9 +172,77 @@
       gravity: "top",
       position: "right",
       backgroundColor: "#dc3545",
-      stopOnFocus: true,
       close: true,
     }).showToast();
   @endif
 </script>
+
+{{-- 🌟 MOBILE STYLING FIX --}}
+<style>
+  /* Gambar Goal */
+  .goal-image {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+  }
+
+  /* Progress responsive */
+  .progress-mobile {
+    height: 14px;
+    max-width: 300px;
+  }
+
+  /* Status Badge */
+  .status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+  }
+
+  .badge-success-outline {
+    border: 2px solid #198754;
+    color: #198754;
+    background: white;
+  }
+
+  .badge-primary-outline {
+    border: 2px solid #0d6efd;
+    color: #0d6efd;
+    background: white;
+  }
+
+  /* 📱 Mobile Optimized */
+  @media (max-width: 576px) {
+
+    .goal-image {
+      width: 100%;
+      height: 160px !important;
+    }
+
+    .progress-mobile {
+      width: 100% !important;
+    }
+
+    .status-badge {
+      top: -5px;
+      right: -5px;
+    }
+
+    .btn {
+      font-size: 0.9rem;
+    }
+
+    table th, table td {
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .modal-dialog {
+      margin: 0 12px;
+    }
+  }
+</style>
+
 @endsection
