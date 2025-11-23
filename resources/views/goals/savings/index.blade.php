@@ -1,68 +1,67 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
+<div class="container mt-3">
 
   {{-- 🔙 Back --}}
-  <a href="{{ route('goals.index') }}" class="btn btn-outline-secondary mb-3 rounded-pill px-4">
+  <a href="{{ route('goals.index') }}" class="btn btn-outline-secondary mb-3 rounded-pill px-3 py-1">
     ← Back to Goals
   </a>
 
   {{-- 🧠 Goal Info --}}
-  <div class="card shadow-sm rounded-4 mb-4 border-0 bg-glass position-relative">
-    <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3 position-relative">
+  <div class="card shadow-sm rounded-4 mb-4 border-0 position-relative">
+    <div class="card-body p-3">
 
-      {{-- ✅ Foto Goal --}}
-      @if($goal->photo)
-        <img src="{{ asset('storage/' . $goal->photo) }}" alt="{{ $goal->title }}"
-             class="rounded-4 goal-image">
-      @else
-        <img src="{{ asset('images/default_goal.jpg') }}" alt="Goal Default"
-             class="rounded-4 goal-image">
-      @endif
-
-      {{-- 🧾 Detail --}}
-      <div class="flex-fill">
-        <h4 class="fw-bold text-dark mb-1">{{ $goal->title }}</h4>
-        <p class="text-muted mb-2">{{ $goal->description ?? '-' }}</p>
-
-        @php
-          $progress = $goal->amount_target > 0 
-                      ? ($goal->amount_current / $goal->amount_target) * 100 
-                      : 0;
-        @endphp
-
-        {{-- Progress Bar --}}
-        <div class="progress rounded-pill progress-mobile">
-          <div class="progress-bar bg-success" role="progressbar" 
-               style="width: {{ $progress }}%;"></div>
-        </div>
-
-        <small class="text-secondary d-block mt-1">
-          Rp {{ number_format($goal->amount_current, 0, ',', '.') }} /
-          Rp {{ number_format($goal->amount_target, 0, ',', '.') }}
-        </small>
+      {{-- Foto Goal --}}
+      <div class="w-100 mb-3">
+        @if($goal->photo)
+          <img src="{{ asset('storage/' . $goal->photo) }}" class="goal-image-mobile rounded-4">
+        @else
+          <img src="{{ asset('images/default_goal.jpg') }}" class="goal-image-mobile rounded-4">
+        @endif
       </div>
 
-      {{-- 🏷 STATUS BADGE --}}
-      <span id="goalStatus" 
-            class="badge status-badge"></span>
+      {{-- Judul + Badge Status --}}
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <h4 class="fw-bold m-0">{{ $goal->title }}</h4>
+        <span id="goalStatus" class="goal-status-badge"></span>
+      </div>
+
+      {{-- Deskripsi --}}
+      <p class="text-muted mb-2">{{ $goal->description ?? '-' }}</p>
+
+      @php
+        $progress = $goal->amount_target > 0 
+                    ? ($goal->amount_current / $goal->amount_target) * 100 
+                    : 0;
+      @endphp
+
+      {{-- Progress --}}
+      <div class="progress rounded-pill" style="height: 14px;">
+        <div class="progress-bar bg-success" style="width: {{ $progress }}%;"></div>
+      </div>
+
+      <small class="text-secondary d-block mt-1">
+        Rp {{ number_format($goal->amount_current, 0, ',', '.') }} /
+        Rp {{ number_format($goal->amount_target, 0, ',', '.') }}
+      </small>
     </div>
   </div>
 
-  {{-- 💰 Add Saving Button --}}
-  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  {{-- 💰 Add Saving --}}
+  <div class="d-flex justify-content-between align-items-center mb-2">
     <h5 class="fw-bold m-0">Savings History</h5>
-    <button class="btn btn-success rounded-pill px-4 py-2 fw-semibold" 
+
+    <button class="btn btn-success rounded-pill px-3 py-1 fw-semibold"
             data-bs-toggle="modal" data-bs-target="#addSavingModal">
-      + Add Saving
+      + Add
     </button>
   </div>
 
-  {{-- 📋 Savings Table --}}
+  {{-- 📋 Table --}}
   <div class="table-responsive shadow-sm rounded-4 overflow-hidden">
-    <table class="table table-hover align-middle mb-0">
-      <thead class="table-light text-uppercase small text-secondary">
+    <table class="table table-hover align-middle mb-0 small">
+      <thead class="table-light text-uppercase text-secondary small">
         <tr>
           <th>Date</th>
           <th>Amount</th>
@@ -72,42 +71,41 @@
       </thead>
       <tbody>
         @forelse($savings as $saving)
-          <tr>
-            <td>{{ \Carbon\Carbon::parse($saving->saved_at)->format('d M Y') }}</td>
-            <td class="text-success fw-bold">+Rp {{ number_format($saving->amount, 0, ',', '.') }}</td>
-            <td>{{ $saving->note ?? '-' }}</td>
-            <td>
-              <form action="{{ route('goals.savings.destroy', $saving->id) }}" method="POST" class="d-inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
-                  <i class="bi bi-trash"></i> Delete
-                </button>
-              </form>
-            </td>
-          </tr>
+        <tr>
+          <td>{{ \Carbon\Carbon::parse($saving->saved_at)->format('d M Y') }}</td>
+          <td class="text-success fw-bold">+Rp {{ number_format($saving->amount) }}</td>
+          <td>{{ $saving->note ?? '-' }}</td>
+          <td>
+            <form action="{{ route('goals.savings.destroy', $saving->id) }}" method="POST">
+              @csrf @method('DELETE')
+              <button class="btn btn-danger btn-sm rounded-pill px-3 py-1">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
         @empty
-          <tr>
-            <td colspan="4" class="text-muted py-4 text-center">No savings added yet.</td>
-          </tr>
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">No savings added yet.</td>
+        </tr>
         @endforelse
       </tbody>
     </table>
   </div>
+
 </div>
 
-{{-- 🧾 Modal Add Saving --}}
-<div class="modal fade" id="addSavingModal" tabindex="-1" aria-hidden="true">
+{{-- Modal Add --}}
+<div class="modal fade" id="addSavingModal" tabindex="-1">
   <div class="modal-dialog">
     <form action="{{ route('goals.savings.store', $goal->id) }}" method="POST" class="modal-content">
       @csrf
-
       <div class="modal-header">
         <h5 class="modal-title fw-bold">Add Saving</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-
       <div class="modal-body">
+
         <div class="mb-3">
           <label class="form-label">Amount</label>
           <input type="number" name="amount" class="form-control" required>
@@ -122,125 +120,61 @@
           <label class="form-label">Note (optional)</label>
           <textarea name="note" class="form-control" rows="2"></textarea>
         </div>
-      </div>
 
+      </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-success rounded-pill px-4">Save</button>
+        <button class="btn btn-outline-secondary rounded-pill">Cancel</button>
+        <button class="btn btn-success rounded-pill px-4">Save</button>
       </div>
     </form>
   </div>
 </div>
 
-{{-- 💡 STATUS LOGIC --}}
+{{-- Status Logic --}}
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const amountCurrent = {{ $goal->amount_current }};
-    const amountTarget = {{ $goal->amount_target }};
-    const badge = document.getElementById("goalStatus");
+document.addEventListener("DOMContentLoaded", function () {
+  const amountCurrent = {{ $goal->amount_current }};
+  const amountTarget = {{ $goal->amount_target }};
+  const badge = document.getElementById("goalStatus");
 
-    if (amountCurrent >= amountTarget && amountTarget > 0) {
-      badge.textContent = "Finished";
-      badge.classList.add("badge-success-outline");
-    } else {
-      badge.textContent = "Ongoing";
-      badge.classList.add("badge-primary-outline");
-    }
-  });
+  if (amountTarget > 0 && amountCurrent >= amountTarget) {
+    badge.textContent = "Finished";
+    badge.classList.add("badge-finished");
+  } else {
+    badge.textContent = "Ongoing";
+    badge.classList.add("badge-ongoing");
+  }
+});
 </script>
 
-{{-- Toastify --}}
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
-<script>
-  @if (session('success'))
-    Toastify({
-      text: "{{ session('success') }}",
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "#198754",
-      close: true,
-    }).showToast();
-  @endif
-
-  @if (session('error'))
-    Toastify({
-      text: "{{ session('error') }}",
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "#dc3545",
-      close: true,
-    }).showToast();
-  @endif
-</script>
-
-{{-- 🌟 MOBILE STYLING FIX ---}}
+{{-- Styles --}}
 <style>
-  /* Gambar Goal */
-  .goal-image {
-    width: 150px;
-    height: 100px;
+  .goal-image-mobile {
+    width: 100%;
+    height: 180px;
     object-fit: cover;
   }
 
-  /* Progress responsive */
-  .progress-mobile {
-    height: 14px;
-    max-width: 300px;
-  }
-
-  /* Status Badge */
-  .status-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 6px 14px;
-    font-size: 0.85rem;
-  }
-
-  .badge-success-outline {
-    border: 2px solid #198754;
-    color: #198754;
-    background: white;
-  }
-
-  .badge-primary-outline {
+  /* Badge Status – sejajar judul */
+  .goal-status-badge {
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    border-radius: 50px;
+    background: #fff;
     border: 2px solid #0d6efd;
     color: #0d6efd;
-    background: white;
+    white-space: nowrap;
   }
 
-  /* 📱 Mobile Optimized */
+  .badge-finished {
+    border-color: #198754;
+    color: #198754;
+  }
+
   @media (max-width: 576px) {
-
-    .goal-image {
-      width: 100%;
-      height: 160px !important;
-    }
-
-    .progress-mobile {
-      width: 100% !important;
-    }
-
-    .status-badge {
-      top: -5px;
-      right: -5px;
-    }
-
-    .btn {
-      font-size: 0.9rem;
-    }
-
     table th, table td {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       white-space: nowrap;
-    }
-
-    .modal-dialog {
-      margin: 0 12px;
     }
   }
 </style>
