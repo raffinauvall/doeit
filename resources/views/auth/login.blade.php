@@ -47,4 +47,33 @@
   </div>
 </div>
 </body>
+  {{-- ✅ Toastify.js CDN --}}
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+<script>
+  @if (session('success'))
+    Toastify({
+      text: "{{ session('success') }}",
+      duration: 3000,
+      gravity: "top", // posisi atas
+      position: "right", // pojok kanan
+      backgroundColor: "#198754",
+      stopOnFocus: true,
+      close: true,
+    }).showToast();
+  @endif
+
+  @if (session('error'))
+    Toastify({
+      text: "{{ session('error') }}",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#dc3545",
+      stopOnFocus: true,
+      close: true,
+    }).showToast();
+  @endif
+</script>
 </html>

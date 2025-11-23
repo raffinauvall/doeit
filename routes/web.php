@@ -51,11 +51,12 @@ Route::get('/export-pdf', [TransactionController::class, 'exportPdf'])->name('tr
     Route::prefix('goals/{goalId}/savings')->group(function () {
         Route::get('/', [GoalSavingController::class, 'index'])->name('goals.savings.index');   // list tabungan per goal
         Route::post('/', [GoalSavingController::class, 'store'])->name('goals.savings.store');  // tambah tabungan
+          
     });
+    Route::delete('/goals/savings/{id}', [GoalSavingController::class, 'destroy'])->name('goals.savings.destroy');    
+    Route::put('/goals/savings/{id}', [GoalSavingController::class, 'update'])->name('goals.savings.update');
 
-    Route::get('/savings/{id}/edit', [GoalSavingController::class, 'edit'])->name('goals.savings.edit');
-    Route::put('/savings/{id}', [GoalSavingController::class, 'update'])->name('goals.savings.update');
-    Route::delete('/savings/{id}', [GoalSavingController::class, 'destroy'])->name('goals.savings.destroy');
+
 
     // Logout
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');

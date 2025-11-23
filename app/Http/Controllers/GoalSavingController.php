@@ -39,11 +39,6 @@ class GoalSavingController extends Controller
         return back()->with('success', 'Savings successfully added!');
     }
 
-    public function edit($id)
-    {
-        $saving = GoalSaving::findOrFail($id);
-        return view('goals.savings.edit', compact('saving'));
-    }
 
     public function update(Request $request, $id)
     {
