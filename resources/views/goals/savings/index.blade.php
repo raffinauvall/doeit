@@ -97,7 +97,7 @@
                                     Edit
                                 </button>
 
-                                <button class="btn btn-danger btn-sm btnDelete" data-id="{{ $saving->id }}"
+                                <button class="btn btn-danger btn-sm btnDelete rounded-pill" data-id="{{ $saving->id }}"
                                     data-bs-toggle="modal" data-bs-target="#deleteSavingModal">
                                     Delete
                                 </button>
@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    {{-- ➕ Add Saving Modal --}}
+    {{--  Add Saving Modal --}}
     <div class="modal fade" id="addSavingModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <form action="{{ route('goals.savings.store', $goal->id) }}" method="POST" class="modal-content">

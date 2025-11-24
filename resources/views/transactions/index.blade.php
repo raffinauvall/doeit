@@ -16,7 +16,7 @@
                 </button>
             </div>
 
-            {{-- 🔍 Filter Bar --}}
+            {{--  Filter Bar --}}
             <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
                 <div class="input-group shadow-sm" style="max-width: 300px;">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>

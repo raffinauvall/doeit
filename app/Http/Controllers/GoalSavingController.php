@@ -60,10 +60,9 @@ class GoalSavingController extends Controller
     public function destroy($id)
     {
         $saving = GoalSaving::findOrFail($id);
-        $goalId = $saving->goal_id;
         $saving->delete();
 
-        $this->recalculateGoal($goalId);
+        $this->recalculateGoal($saving->goal_id);
 
         return back()->with('success', 'Savings successfully deleted!');
     }

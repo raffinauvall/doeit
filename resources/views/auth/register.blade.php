@@ -14,7 +14,7 @@
 
   <div class="container mt-5 d-flex justify-content-center flex-column align-items-center" style="max-width: 400px;">
     
-    {{-- ✅ ERROR VALIDASI --}}
+    {{-- ERROR VALIDASI --}}
     @if ($errors->any())
       <div class="alert alert-danger w-100 mb-3">
         <strong>An error occurred:</strong>
@@ -23,13 +23,6 @@
             <li>{{ $error }}</li>
           @endforeach
         </ul>
-      </div>
-    @endif
-
-    {{-- ✅ PESAN BERHASIL --}}
-    @if (session('success'))
-      <div class="alert alert-success w-100 mb-3">
-        {{ session('success') }}
       </div>
     @endif
 

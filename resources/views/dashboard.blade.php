@@ -10,21 +10,21 @@
         <div class="col-md-4 mb-4">
             <div class="card rounded-2 shadow border-0 text-white bg-success w-100 p-3">
                 <span class="finance-title">Your Balance</span>
-                <span class="amount-balance">Rp.{{ number_format($balance, 0, ',', '.') }}</span>
+                <span class="amount-balance">Rp {{ number_format($balance, 0, ',', '.') }}</span>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card rounded-2 shadow border-0 text-white bg-primary w-100 p-3">
                 <span class="finance-title">Income</span>
-                <span class="amount-balance">Rp.{{ number_format($totalIncome, 0, ',', '.') }}</span>
+                <span class="amount-balance">Rp {{ number_format($totalIncome, 0, ',', '.') }}</span>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card rounded-2 shadow border-0 text-white bg-warning w-100 p-3">
                 <span class="finance-title">Expense</span>
-                <span class="amount-balance">Rp.{{ number_format($totalExpense, 0, ',', '.') }}</span>
+                <span class="amount-balance">Rp {{ number_format($totalExpense, 0, ',', '.') }}</span>
             </div>
         </div>
     </div>

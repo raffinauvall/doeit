@@ -49,7 +49,7 @@ class GoalController extends Controller
         return redirect()->back()->with('success', 'New goal has been successfully added!');
     }
 
-    // 🔹 Update goal
+   
     public function update(Request $request, $id)
     {
         $goal = Goal::where('users_id', Auth::id())->findOrFail($id);
@@ -80,7 +80,7 @@ class GoalController extends Controller
         return redirect()->back()->with('success', 'Goal successfully updated!');
     }
 
-    // 🔹 Hapus goal
+  
     public function destroy($id)
     {
         $goal = Goal::where('users_id', Auth::id())->findOrFail($id);
